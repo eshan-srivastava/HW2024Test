@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     {
         if (playerController.transform.position.y < -3)
         {
+            Debug.Log("Game over");
             StopGame();
             ShowGameOverScreen();
         }

@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Analytics;
 
 public class PlayerMovement : MonoBehaviour
 {
     public float playerSpeed = 5;
     Rigidbody rb;
     // Start is called before the first frame update
+    private GameObject gameOverScreen;
     void Start()
     {
         // Access the JsonLoader instance
@@ -54,6 +56,11 @@ public class PlayerMovement : MonoBehaviour
     {
         float jumpfactor = (float)1.8 * playerSpeed;
         float movementFactor = (float)2.5 * playerSpeed;
+        if (transform.position.y < -2)
+        {
+            Debug.Log("Game over");
+            StopGame();
+        }
         if(Input.GetKey(KeyCode.Space) && IsGrounded())
         {
             rb.velocity = new Vector3(rb.velocity.x, jumpfactor, rb.velocity.z);
@@ -80,6 +87,13 @@ public class PlayerMovement : MonoBehaviour
         //Physics.CheckSphere(groundCheck.position, 0.1f, );
         return rb.velocity.y == 0;
     }
+    void StopGame()
+    {
+        Time.timeScale = 0f;
+        // Stop other game elements (audio, etc.)
+    }
+
+    
 }
 
 /*

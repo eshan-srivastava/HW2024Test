@@ -10,11 +10,6 @@ public class CameraBehavior : MonoBehaviour
     public float height = 2f;   // Height above the sphere
     public float damping = 5f;
     private Transform player;
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
     
     // Update is called once per frame
     void Update()

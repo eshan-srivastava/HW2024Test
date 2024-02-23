@@ -7,18 +7,21 @@ using UnityEngine;
 public class Pulpit : MonoBehaviour
 {
     public float startingNumber = 5;
-    public float decreaseRate = 0.003f;
+    [SerializeField] float decreaseRate = 0.003f;
 
     private float currentNumber;
     private TextMeshPro TileTime;
     public Vector3[] spawnPoints;
+    Score scoreInstance;
     // Start is called before the first frame update
     void Start()
     {
         InitializeSpawnPoints();
         TileTime = GetComponentInChildren<TextMeshPro>();
         currentNumber = startingNumber;
+        scoreInstance = GameObject.FindObjectOfType<Score>();
         UpdateText();
+
     }
     void InitializeSpawnPoints()
     {
@@ -31,6 +34,10 @@ public class Pulpit : MonoBehaviour
         }
         //Debug.Log(spawnPoints[0]);
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        
+    }
     void UpdateText()
     {
         // Update the text component to display the current number, F2 format for 2 decimal places
@@ -39,7 +46,6 @@ public class Pulpit : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Decrease the number every frame
         currentNumber -= decreaseRate;
 
         // Update the text component to display the current number

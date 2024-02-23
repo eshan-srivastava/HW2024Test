@@ -13,7 +13,7 @@ public class PlatformGenerator : MonoBehaviour
     public float platformDurationMax;
     public float platformDuration;
 
-    public Vector3 lastGeneratedPosition;
+    [SerializeField] Vector3 lastGeneratedPosition;
     public GameObject lastPlatform;
     public Vector3[] potentialEdgeDirections;
     bool dataLoaded = false;

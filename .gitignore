@@ -151,6 +151,9 @@ coverage*.info
 *.coverage
 *.coveragexml
 
+#VS code settings
+.vscode
+
 # NCrunch
 _NCrunch_*
 .*crunch*.local.xml
