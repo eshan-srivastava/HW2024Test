@@ -6,69 +6,33 @@ using UnityEngine;
 
 public class PlatformGenerator : MonoBehaviour
 {
-
     public GameObject pulpitPrefab;
-    public float generationInterval;
-    public float platformDurationMin;
-    public float platformDurationMax;
+    private float generationInterval = 2.2f;
+    private float platformDurationMin = 4.1f;
+    private float platformDurationMax = 5.1f;
     public float platformDuration;
 
     [SerializeField] Vector3 lastGeneratedPosition;
     public GameObject lastPlatform;
-    public Vector3[] potentialEdgeDirections;
-    bool dataLoaded = false;
-    // Start is called before the first frame update
+    // public Vector3[] potentialEdgeDirections;
+    // Start is called before the first frame update    
+    public void SetPulpitData(PulpitData pulpitData){
+        generationInterval = pulpitData.pulpit_spawn_time;
+        platformDurationMin = pulpitData.min_pulpit_destroy_time;
+        platformDurationMax = pulpitData.max_pulpit_destroy_time;
+    }
     void Start()
-    {
-        JsonLoader jsonLoader = JsonLoader.Instance;
-        if (!lastPlatform) lastPlatform = GameObject.Find("starterpulpit");
-        // Ensure JsonLoader is not null before proceeding
-        if (!dataLoaded && jsonLoader != null)
-        {
-            // Start a coroutine to wait for data to be loaded
-            StartCoroutine(WaitForDataLoaded(jsonLoader));
-            dataLoaded = true;
-        }
-        else
-        {
-            Debug.LogError("JsonLoader instance is null.");
-        }
-        
-        lastGeneratedPosition = lastPlatform.transform.position;
-        
+    {      
+        lastGeneratedPosition = lastPlatform.transform.position;   
         InvokeRepeating(nameof(SpawnPulpit), generationInterval, generationInterval);
         //StartCoroutine(GeneratePlatform());
-    }
-    private IEnumerator WaitForDataLoaded(JsonLoader jsonLoader)
-    {
-        // Trigger JSON loading
-        yield return StartCoroutine(jsonLoader.LoadJsonCoroutine());
-
-        // Access the loaded data
-        MyDataClass loadedData = jsonLoader.GetLoadedData();
-
-        // Ensure loaded data is not null before using it
-        if (loadedData != null)
-        {
-            // Access and use the data as needed
-            Debug.Log("Min Pulpit Destroy: " + loadedData.pulpit_data.min_pulpit_destroy_time);
-            generationInterval = loadedData.pulpit_data.pulpit_spawn_time;
-            platformDurationMin = loadedData.pulpit_data.min_pulpit_destroy_time;
-            platformDurationMax = loadedData.pulpit_data.max_pulpit_destroy_time;
-
-            Start();
-        }
-        else
-        {
-            Debug.LogError("Loaded data is null.");
-        }
     }
     
     public void SpawnPulpit()
     {
         //Debug.Log("SpawnPulpit called");
         platformDuration = UnityEngine.Random.Range(platformDurationMin, platformDurationMax);
-        Vector3 nextSpawnPoint = GetRandomEdge(lastPlatform);
+        Vector3 nextSpawnPoint = NextRandomSpawnPoint(lastPlatform);
         GameObject newPlatform = Instantiate(pulpitPrefab, nextSpawnPoint, Quaternion.identity);
         //newPlatform.AddComponent<Pulpit>();
         newPlatform.GetComponent<Pulpit>().startingNumber = platformDuration;
@@ -80,17 +44,14 @@ public class PlatformGenerator : MonoBehaviour
         //yield return new WaitForSeconds(generationInterval);
 
     }
-    Vector3 GetRandomEdge(GameObject platform)
-    {
+    Vector3 NextRandomSpawnPoint(GameObject platform){
         if (platform == null)
         {
             // If there is no previous platform, return the current position of the generator
             Debug.Log("no platform");
             return transform.position;
         }
-        
         Vector3 spawnPosition = Vector3.zero;
-        bool foundSpawnPoint = false;
         // Get the collider of the previous platform
         Collider collider = platform.GetComponent<Collider>();
         //BoxCollider collider.size = new Vector3(9, 0.1f, 9);
@@ -100,15 +61,11 @@ public class PlatformGenerator : MonoBehaviour
             Debug.Log("no collider");
             return transform.position;
         }
-        Vector3[] potentialEdgeDirections = new Vector3[] {
-                new (1, 0, 0),  // Right edge
-                new (-1, 0, 0), // Left edge
-                new (0, 0, 1),  // Forward edge
-                new (0, 0, -1)  // Backward edge
-            };
-        Vector3[] shuffledEdges = potentialEdgeDirections;
-        Shuffle(shuffledEdges);
         
+        bool foundSpawnPoint = false;
+        Vector3[] shuffledEdges = GetShuffledEdges(platform);
+
+
         // Randomly choose one of the four edges
         foreach (Vector3 edgeDirection in shuffledEdges)
         {
@@ -124,7 +81,7 @@ public class PlatformGenerator : MonoBehaviour
             }
         }
 
-        if (!foundSpawnPoint)
+         if (!foundSpawnPoint)
         {
             //return RandomPositionWithinBounds(spawnPosition);
             //return spawnPosition;
@@ -133,24 +90,36 @@ public class PlatformGenerator : MonoBehaviour
         // Default: return the current position of the generator
         return transform.position;
     }
+    Vector3[] GetShuffledEdges(GameObject platform)
+    {
+        Vector3[] potentialEdgeDirections = new Vector3[] {
+                new (1, 0, 0),  // Right edge
+                new (-1, 0, 0), // Left edge
+                new (0, 0, 1),  // Forward edge
+                new (0, 0, -1)  // Backward edge
+            };
+        Vector3[] shuffledEdges = potentialEdgeDirections;
+        Shuffle(shuffledEdges);
+        return shuffledEdges;
+    }
     Vector3 NextPosition(Vector3 spawnPosition)
     {
         float platformHalfWidth = 9f * 0.5f;
         if (spawnPosition.x > 0)
         {
-            spawnPosition.x = spawnPosition.x + platformHalfWidth;
+            spawnPosition.x += platformHalfWidth;
         }
         else if (spawnPosition.x < 0)
         {
-            spawnPosition.x = spawnPosition.x - platformHalfWidth;
+            spawnPosition.x -= platformHalfWidth;
         }
         else if (spawnPosition.z > 0)
         {
-            spawnPosition.z = spawnPosition.z + platformHalfWidth;
+            spawnPosition.z += platformHalfWidth;
         }
         else if (spawnPosition.z < 0)
         {
-            spawnPosition.z = spawnPosition.z - platformHalfWidth;
+            spawnPosition.z -= platformHalfWidth;
         }
         return spawnPosition;
     }
@@ -164,10 +133,5 @@ public class PlatformGenerator : MonoBehaviour
             array[r] = array[n];
             array[n] = t;
         }
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

@@ -1,23 +1,28 @@
-using Platformer.Mechanics;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public GameObject gameOverScreen;
-    public float gameOverThreshold;
+    public float gameOverThreshold = -10f;
+    // public GameObject player;
 
-    private PlayerController playerController;
-
+    [SerializeField]
+    private PlayerInputController playerInputController;
+    private MyDataClass apiData;
+    [SerializeField]
+    private JsonLoader jsonLoader;
+    [SerializeField]
+    private PlatformGenerator platformGenerator;
     void Start()
     {
-        playerController = GetComponent<PlayerController>();
+        apiData = jsonLoader.GetLoadedData();
+        platformGenerator.SetPulpitData(apiData.pulpit_data);
+        playerInputController.PlayerSpeed = apiData.player_data.speed;
     }
 
     void Update()
     {
-        if (playerController.transform.position.y < -3)
+        if (playerInputController.transform.position.y < gameOverThreshold)
         {
             Debug.Log("Game over");
             StopGame();
@@ -28,10 +33,10 @@ public class GameManager : MonoBehaviour
     void StopGame()
     {
         Time.timeScale = 0f;
-        playerController.enabled = false;
+        playerInputController.enabled = false;
         // Stop other game elements (audio, etc.)
     }
-
+    
     void ShowGameOverScreen()
     {
         gameOverScreen.SetActive(true);
