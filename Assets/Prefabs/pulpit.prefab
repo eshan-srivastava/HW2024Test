@@ -388,8 +388,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingNumber: 5
-  decreaseRate: 0.003
-  spawnPoints: []
+  pulpitPool: {fileID: 0}
+  spawnPoints:
+  - {x: 0, y: 0, z: 0.5}
+  - {x: 0, y: 0, z: -0.5}
+  - {x: 0.5, y: 0, z: 0}
+  - {x: 0.5, y: 0, z: 0}
 --- !u!1 &8812568448810426363
 GameObject:
   m_ObjectHideFlags: 0

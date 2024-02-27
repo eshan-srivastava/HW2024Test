@@ -5,21 +5,28 @@ using UnityEngine;
 public class PlayerInputController : MonoBehaviour
 {  
     public float PlayerSpeed{get;set;}
-    private PlayerController _playerController;
+    private PlayerMovementController _playerMovementController;
     private Rigidbody _rb;
-    void Awake()
+    void Start()
     {
         _rb = GetComponent<Rigidbody>();
-        _playerController = new PlayerController(_rb, PlayerSpeed);
+        _playerMovementController = new PlayerMovementController(_rb, PlayerSpeed);
     }
 
     void Update()
     {
-        if(Input.GetKey(KeyCode.Space))
+        if(Input.GetKeyDown(KeyCode.Space))
         {
-           _playerController.Jump();
+           Debug.Log("received space");
+           _playerMovementController.Jump();
         }
         Vector3 inputMovement = new(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        _playerController.Movement(inputMovement);
+        
+        // if (Input.GetKeyDown(KeyCode.W)){
+        //     Debug.Log("w pressed");
+        // }
+        // Debug.Log(inputMovement.x + " " + inputMovement.z);
+        
+        _playerMovementController.Movement(inputMovement);
     }
 }

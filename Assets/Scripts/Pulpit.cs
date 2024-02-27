@@ -1,36 +1,32 @@
+using System;
 using TMPro;
 using UnityEngine;
 
 public class Pulpit : MonoBehaviour
 {
     public float startingNumber = 5;
-    [SerializeField] float decreaseRate = 0.003f;
+    public PulpitPool pulpitPool;
+    //[SerializeField] float decreaseRate = 0.003f;
 
-    private float currentNumber;
-    private TextMeshPro TileTime;
+    private float _currentNumber;
+    private TextMeshPro _tileTime;
     public Vector3[] spawnPoints;
-    Score scoreInstance;
-    // Start is called before the first frame update
+    //public Score scoreInstance;
+    private PulpitPool _pulpitPool;
+// if singletons are allowed then pulpit pool should be singleton so that it can be accessed from multiple files
+    
     void Start()
     {
-        InitializeSpawnPoints();
-        TileTime = GetComponentInChildren<TextMeshPro>();
-        currentNumber = startingNumber;
-        scoreInstance = GameObject.FindObjectOfType<Score>();
-        UpdateText();
-
     }
-    void InitializeSpawnPoints()
+
+    private void OnEnable()
     {
-        spawnPoints = new Vector3[4];
-
-        for (int i = 0; i < 4; i++)
-        {
-            // Store the position of each child in the spawnPoints array
-            spawnPoints[i] = transform.GetChild(i).position;
-        }
-        //Debug.Log(spawnPoints[0]);
+        _tileTime = GetComponentInChildren<TextMeshPro>();
+        _currentNumber = startingNumber;
+        _pulpitPool = pulpitPool;
+        UpdateText();
     }
+
     private void OnTriggerEnter(Collider other)
     {
         
@@ -38,20 +34,34 @@ public class Pulpit : MonoBehaviour
     void UpdateText()
     {
         // Update the text component to display the current number, F2 format for 2 decimal places
-        TileTime.text = currentNumber.ToString("F2");
+        _tileTime.text = _currentNumber.ToString("F2");
     }
     // Update is called once per frame
     void Update()
     {
-        currentNumber -= decreaseRate;
-
-        // Update the text component to display the current number
-        UpdateText();
-
-        if (currentNumber <= 0f)
+        if (_currentNumber > 0f)
+        { 
+            _currentNumber -= Time.deltaTime;
+            // Update the text component to display the current number
+            UpdateText();
+        }
+        else
         {
-            //platformGenerator.SpawnPulpit(gameObject, spawnPoints);
-            Destroy(gameObject);
+            //Destroy(gameObject);
+            pulpitPool.ReturnToPool(gameObject);
+            return;
         }
     }
 }
+
+// void InitializeSpawnPoints()
+// {
+//     spawnPoints = new Vector3[4];
+//
+//     for (int i = 0; i < 4; i++)
+//     {
+//         // Store the position of each child in the spawnPoints array
+//         spawnPoints[i] = transform.GetChild(i).position;
+//     }
+//     //Debug.Log(spawnPoints[0]);
+// }

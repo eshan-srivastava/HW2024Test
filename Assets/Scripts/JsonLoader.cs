@@ -7,15 +7,15 @@ public class JsonLoader : MonoBehaviour
 {
     // private static bool hasLoaded = false;
     public string jsonUrl = "https://s3.ap-south-1.amazonaws.com/superstars.assetbundles.testbuild/doofus_game/doofus_diary.json";
-    private MyDataClass loadedData;
+    private MyDataClass _loadedData;
 
-    public void Awake(){
+    public void OnEnable(){
         StartCoroutine(LoadJsonCoroutine());
     }
     public MyDataClass GetLoadedData()
     {
         Debug.Log("GetLoadedData method called.");
-        return loadedData;
+        return _loadedData;
     }
 
     // LoadJsonAndPrintDebug method to debug log and load json data
@@ -26,6 +26,7 @@ public class JsonLoader : MonoBehaviour
     // }
 
     // public void LoadJson()
+    // ReSharper disable Unity.PerformanceAnalysis
     public IEnumerator LoadJsonCoroutine()
     {
         UnityWebRequest request = UnityWebRequest.Get(jsonUrl);
@@ -42,7 +43,8 @@ public class JsonLoader : MonoBehaviour
             ParseJson(jsonText);
         }
     }
-    void ParseJson(string jsonText)
+
+    private void ParseJson(string jsonText)
     {
         MyDataClass data = JsonUtility.FromJson<MyDataClass>(jsonText);
 
@@ -59,7 +61,8 @@ public class JsonLoader : MonoBehaviour
             //Debug.Log("Min Pulpit Destroy Time: " + minPulpitDestroyTime);
             //Debug.Log("Max Pulpit Destroy Time: " + maxPulpitDestroyTime);
             //Debug.Log("Pulpit Spawn Time: " + pulpitSpawnTime);
-            loadedData = data;
+            _loadedData = data;
+            Debug.Log("Assigned data to loadedData");
         }
         else
         {

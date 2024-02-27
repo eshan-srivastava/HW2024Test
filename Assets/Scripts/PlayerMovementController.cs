@@ -1,29 +1,32 @@
 using UnityEngine;
-public class PlayerController
+public class PlayerMovementController
 {
-    private float _playerSpeed = 3f;
-    public float jumpMultiplier = 1.8f;
-    public float movementMultiplier = 2.5f;
+    private float _playerSpeed;
+    private const float JumpMultiplier = 1.8f;
+    private const float MovementMultiplier = 2.5f;
     private Rigidbody _rb;
     
-    public PlayerController(Rigidbody rb, float playerSpeed){
+    public PlayerMovementController(Rigidbody rb, float playerSpeed){
         _rb = rb;
         _playerSpeed = playerSpeed;
     }
     public void Movement(Vector3 inputMovement){
-        float movementFactor = movementMultiplier * _playerSpeed;
+        float movementFactor = MovementMultiplier * _playerSpeed;
+
+        // Debug.Log("movement factor is " + movementFactor);
         // rb.velocity += inputMovement * movementFactor;
+        
         _rb.velocity = movementFactor * inputMovement;
     }
     public void Jump(){
         if (IsGrounded()){
            return;
         }
-        float jumpfactor = jumpMultiplier * _playerSpeed;
-        // _rb.velocity = new Vector3(_rb.velocity.x, jumpfactor, _rb.velocity.z);
-        _rb.velocity += new Vector3(0, jumpfactor, 0);
+        float jumpFactor = JumpMultiplier * _playerSpeed;
+        // _rb.velocity = new Vector3(_rb.velocity.x, jumpFactor, _rb.velocity.z);
+        _rb.velocity += new Vector3(0, jumpFactor, 0);
     }
-    bool IsGrounded()
+    private bool IsGrounded()
     {
         return _rb.velocity.y == 0;
     }
