@@ -7,8 +7,6 @@ public class PlayerInputController : MonoBehaviour
 {  
     public static float PlayerSpeed{get;set;}
 
-    public GameObject PauseMenu;
-    
     private PlayerMovementController _playerMovementController;
     private Rigidbody _rb;
     
@@ -21,10 +19,6 @@ public class PlayerInputController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            
-        }
         if(Input.GetKeyDown(KeyCode.Space))
         {
            // Debug.Log("received space");

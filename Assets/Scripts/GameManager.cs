@@ -24,7 +24,6 @@ public class GameManager : MonoBehaviour
         gameHasEnded = false;
         _apiData = jsonLoader.GetLoadedData();
         StartCoroutine(FetchAndLoadData());
-        
     }
 
     void Update()
@@ -50,7 +49,7 @@ public class GameManager : MonoBehaviour
             
         // }
         // yield return _apiData;
-        yield return new WaitWhile(() => _apiData == null);
+        yield return  new WaitWhile(() => _apiData == null);
         
         platformGenerator.SetPulpitData(_apiData.pulpit_data);
         //playerInputController.PlayerSpeed = _apiData.player_data.speed;

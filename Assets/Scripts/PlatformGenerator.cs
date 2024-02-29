@@ -42,7 +42,6 @@ public class PlatformGenerator : MonoBehaviour
         //Debug.Log("SpawnPulpit called");
         platformDuration = UnityEngine.Random.Range(_platformDurationMin, _platformDurationMax);
 
-        // Vector3 nextSpawnPoint = NextRandomSpawnPoint(lastPlatform);
         Vector3 nextSpawnPoint = _platformSpawnLogic.NextRandomSpawnPoint(lastPlatform, transform);
 
         // GameObject newPlatform = Instantiate(pulpitPrefab, nextSpawnPoint, Quaternion.identity);
