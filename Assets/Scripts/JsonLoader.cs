@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -27,7 +26,7 @@ public class JsonLoader : MonoBehaviour
 
     // public void LoadJson()
     // ReSharper disable Unity.PerformanceAnalysis
-    public IEnumerator LoadJsonCoroutine()
+    private IEnumerator LoadJsonCoroutine()
     {
         UnityWebRequest request = UnityWebRequest.Get(jsonUrl);
         Debug.Log("connecting to : " + jsonUrl);
@@ -63,6 +62,7 @@ public class JsonLoader : MonoBehaviour
             //Debug.Log("Pulpit Spawn Time: " + pulpitSpawnTime);
             _loadedData = data;
             Debug.Log("Assigned data to loadedData");
+            // PlayerInputController.PlayerSpeed = _loadedData.player_data.speed;
         }
         else
         {

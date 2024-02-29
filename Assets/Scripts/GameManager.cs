@@ -1,12 +1,15 @@
+using System.Collections;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public GameObject gameOverScreen;
+    public GameObject winLevelScreen;
     public float gameOverThreshold = -10f;
-    // public GameObject player;
-
-    private bool _dataLoaded = false;
+    
+    // private bool _dataLoaded = false;
+    public static bool gameHasEnded;
+    
     private MyDataClass _apiData;
 
     [SerializeField] private GameObject player;
@@ -18,49 +21,56 @@ public class GameManager : MonoBehaviour
     private PlatformGenerator platformGenerator;
     void Start()
     {
+        gameHasEnded = false;
         _apiData = jsonLoader.GetLoadedData();
-        // if (apiData != null){
-        //     Debug.Log("not null api data");
-            
-        // }
+        StartCoroutine(FetchAndLoadData());
         
-        platformGenerator.SetPulpitData(_apiData.pulpit_data);
     }
 
     void Update()
     {
-        if (_dataLoaded)
+        if (gameHasEnded)
         {
             return;
         }
-        else
+        if (playerInputController.transform.position.y < gameOverThreshold || Input.GetKeyDown(KeyCode.L))
         {
-            if (_apiData != null && player.activeInHierarchy == false)
-            {
-                _dataLoaded = true;
-                playerInputController.PlayerSpeed = _apiData.player_data.speed;
-                player.SetActive(true);
-            }
+            EndLevel();
         }
-        
-        if (playerInputController.transform.position.y < gameOverThreshold)
+
+        if (PlayerStats.score == 50 || Input.GetKeyDown(KeyCode.J))
         {
-            // Debug.Log("Game over");
-            // StopGame();
-            ShowGameOverScreen();
+            WinLevel();
         }
     }
-
-    void StopGame()
+    private IEnumerator FetchAndLoadData()
     {
+        // if (apiData != null){
+        //     Debug.Log("not null api data");
+            
+        // }
+        // yield return _apiData;
+        yield return new WaitWhile(() => _apiData == null);
+        
+        platformGenerator.SetPulpitData(_apiData.pulpit_data);
+        //playerInputController.PlayerSpeed = _apiData.player_data.speed;
+        PlayerInputController.PlayerSpeed = _apiData.player_data.speed;
+        player.SetActive(true);
+    }
+    private void EndLevel()
+    {
+        gameHasEnded = true;
+        gameOverScreen.SetActive(true);
         Time.timeScale = 0f;
         playerInputController.enabled = false;
-        // Stop other game elements (audio, etc.)
+        // Debug.Log("Game Ended");
     }
     
-    void ShowGameOverScreen()
+    private void WinLevel()
     {
-        gameOverScreen.SetActive(true);
-        // ... (other actions for displaying game over)
+        Time.timeScale = 0f;
+        gameHasEnded = true;
+        winLevelScreen.SetActive(true);
     }
+    
 }

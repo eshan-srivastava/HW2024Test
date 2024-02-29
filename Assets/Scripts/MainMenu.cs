@@ -5,9 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    public SceneFader sceneFader;
     public void PlayGame()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1); //in build settings, the game scene is next after menu
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1); //in build settings, the game scene is next after menu
+        sceneFader.FadeTo("MainLevel");
     }
     public void QuitGame()
     {

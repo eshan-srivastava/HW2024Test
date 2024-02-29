@@ -19,7 +19,7 @@ public class PlayerMovementController
         _rb.velocity = movementFactor * inputMovement;
     }
     public void Jump(){
-        if (IsGrounded()){
+        if (!IsGrounded()){
            return;
         }
         float jumpFactor = JumpMultiplier * _playerSpeed;

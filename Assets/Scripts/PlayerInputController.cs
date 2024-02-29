@@ -1,13 +1,19 @@
+using System;
 using UnityEngine;
 
 // [RequireComponent(typeof(PlayerMovement))]
 //more aptly, PlayerMovement class
 public class PlayerInputController : MonoBehaviour
 {  
-    public float PlayerSpeed{get;set;}
+    public static float PlayerSpeed{get;set;}
+
+    public GameObject PauseMenu;
+    
     private PlayerMovementController _playerMovementController;
     private Rigidbody _rb;
-    void Start()
+    
+
+    private void OnEnable()
     {
         _rb = GetComponent<Rigidbody>();
         _playerMovementController = new PlayerMovementController(_rb, PlayerSpeed);
@@ -15,9 +21,13 @@ public class PlayerInputController : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            
+        }
         if(Input.GetKeyDown(KeyCode.Space))
         {
-           Debug.Log("received space");
+           // Debug.Log("received space");
            _playerMovementController.Jump();
         }
         Vector3 inputMovement = new(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));

@@ -6,30 +6,34 @@ public class Pulpit : MonoBehaviour
 {
     public float startingNumber = 5;
     public PulpitPool pulpitPool;
+    private PulpitPool _pulpitPool;
+
+    private bool _hasIncreasedScoreOnce;
     //[SerializeField] float decreaseRate = 0.003f;
 
     private float _currentNumber;
     private TextMeshPro _tileTime;
     public Vector3[] spawnPoints;
-    //public Score scoreInstance;
-    private PulpitPool _pulpitPool;
-// if singletons are allowed then pulpit pool should be singleton so that it can be accessed from multiple files
-    
-    void Start()
-    {
-    }
+    // if singletons are allowed then pulpit pool should be singleton so that it can be accessed from multiple files
 
     private void OnEnable()
     {
+        _hasIncreasedScoreOnce = false;
         _tileTime = GetComponentInChildren<TextMeshPro>();
         _currentNumber = startingNumber;
         _pulpitPool = pulpitPool;
         UpdateText();
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        
+        if (_hasIncreasedScoreOnce)
+        {
+            return;
+        }
+        //inc score by 1
+        PlayerStats.score++;
+        _hasIncreasedScoreOnce = true;
     }
     void UpdateText()
     {

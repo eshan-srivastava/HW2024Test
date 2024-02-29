@@ -37,7 +37,7 @@ public class PlatformSpawnLogic
             //Debug.Log("Trying position : " + spawnPosition);
             
             // Check for collisions using Physics.CheckSphere:
-            if (!Physics.CheckSphere(position:2*spawnPosition, radius:halfWidth - Delta))
+            if (!Physics.CheckSphere(position:2*spawnPosition, radius:halfWidth - Delta, layerMask: 0))
             {
                 foundSpawnPoint = true;
                 break; // Exit the loop as soon as a suitable edge is found
