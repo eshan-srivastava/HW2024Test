@@ -1,33 +1,45 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
-public class PulpitPool : MonoBehaviour
+public class PulpitPool : IInitializable, IDisposable
 {
-    public GameObject pulpitPrefab;
+    private GameObject _pulpitPrefab;
+    private Pulpit.Factory _pulpitFactory;
 
     // private IObjectPool<GameObject> _pulpitPool;
     private Queue<GameObject> _pulpitPool;
     private int _amountToPool;
-
-    private void Awake()
+    
+    [Inject]
+    public PulpitPool(GameObject pulpitPrefab, Pulpit.Factory pulpitFactory)
+    {
+        this._pulpitPrefab = pulpitPrefab;
+        this._pulpitFactory = pulpitFactory;
+    }
+    public void Initialize()
     {
         _pulpitPool = new Queue<GameObject>();
-        _amountToPool = 3;
-    }
-    
-    void Start()
-    {
+        _amountToPool = 2;
         //prewarm the pool
         AddPulpits(_amountToPool);
+    }
+    public void Dispose()
+    {
+        _pulpitPool.Clear();
     }
     private void AddPulpits(int count)
     {
         for (var i = 0; i < count; i++)
         {
-            GameObject obj = Instantiate(pulpitPrefab);
-            obj.SetActive(false);
-            _pulpitPool.Enqueue(obj);
+            // GameObject obj = Instantiate(pulpitPrefab);
+            // obj.GetComponent<Pulpit>().pulpitPool = this;
+            // GameObject obj = Pulpit.Factory.Create();
+            Pulpit obj = _pulpitFactory.Create();
+            
+            obj.gameObject.SetActive(false);
+            _pulpitPool.Enqueue(obj.gameObject);
         }
     }
     public GameObject GetPooledObject()
@@ -43,6 +55,7 @@ public class PulpitPool : MonoBehaviour
         pulpitToReturn.SetActive(false);
         _pulpitPool.Enqueue(pulpitToReturn);
     }
+
 }
 
 /*

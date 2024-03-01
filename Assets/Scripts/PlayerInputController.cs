@@ -1,22 +1,28 @@
-using System;
+using Interfaces;
 using UnityEngine;
+using Zenject;
 
 // [RequireComponent(typeof(PlayerMovement))]
 //more aptly, PlayerMovement class
 public class PlayerInputController : MonoBehaviour
-{  
-    public static float PlayerSpeed{get;set;}
-
-    private PlayerMovementController _playerMovementController;
-    private Rigidbody _rb;
+{
+    // both interface usage and direct class type is working
+    // private PlayerMovementController _playerMovementController;
+    private IPlayerMovementController _playerMovementController;
     
+    private Rigidbody _rb;
 
+    [Inject]
+    public void Construct(IPlayerMovementController playerMovementController)
+    {
+        _playerMovementController = playerMovementController;
+    }
     private void OnEnable()
     {
-        _rb = GetComponent<Rigidbody>();
-        _playerMovementController = new PlayerMovementController(_rb, PlayerSpeed);
+        //moved to dependency
+        // _rb = GetComponent<Rigidbody>();
+        // _playerMovementController = new PlayerMovementController(_rb);
     }
-
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.Space))
@@ -25,11 +31,6 @@ public class PlayerInputController : MonoBehaviour
            _playerMovementController.Jump();
         }
         Vector3 inputMovement = new(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        
-        // if (Input.GetKeyDown(KeyCode.W)){
-        //     Debug.Log("w pressed");
-        // }
-        // Debug.Log(inputMovement.x + " " + inputMovement.z);
         
         _playerMovementController.Movement(inputMovement);
     }

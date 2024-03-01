@@ -5,7 +5,6 @@ public class PlatformSpawnLogic
 {
     private const float Delta = 0.04f;
     private const float Tolerance = 1f;
-
     
     public Vector3 NextRandomSpawnPoint(GameObject platform, Transform generator){
         if (platform == null)

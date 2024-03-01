@@ -1,11 +1,12 @@
 using System;
 using TMPro;
 using UnityEngine;
+using Zenject;
 
 public class Pulpit : MonoBehaviour
 {
     public float startingNumber = 5;
-    public PulpitPool pulpitPool;
+    // public PulpitPool pulpitPool;
     private PulpitPool _pulpitPool;
 
     private bool _hasIncreasedScoreOnce;
@@ -21,8 +22,15 @@ public class Pulpit : MonoBehaviour
         _hasIncreasedScoreOnce = false;
         _tileTime = GetComponentInChildren<TextMeshPro>();
         _currentNumber = startingNumber;
-        _pulpitPool = pulpitPool;
+        // _pulpitPool = pulpitPool;
         UpdateText();
+    }
+
+    [Inject]
+    public void Construct(PulpitPool pulpitPool)
+    {
+        _pulpitPool = pulpitPool;
+        this.gameObject.layer = 3;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -52,10 +60,13 @@ public class Pulpit : MonoBehaviour
         else
         {
             //Destroy(gameObject);
-            pulpitPool.ReturnToPool(gameObject);
+            // pulpitPool.ReturnToPool(gameObject);
+            _pulpitPool.ReturnToPool(gameObject);
             return;
         }
     }
+    
+    public class Factory : PlaceholderFactory<Pulpit> { }
 }
 
 // void InitializeSpawnPoints()

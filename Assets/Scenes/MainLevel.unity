@@ -156,7 +156,6 @@ MonoBehaviour:
   platformDuration: 0
   lastGeneratedPosition: {x: 0, y: 0, z: 0}
   lastPlatform: {fileID: 221017932}
-  pulpitPool: {fileID: 21526953}
 --- !u!4 &21526952
 Transform:
   m_ObjectHideFlags: 0
@@ -185,7 +184,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90eac2b19e8447f698c4ed2eba176e4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pulpitPrefab: {fileID: 7670768229142912226, guid: 8e19f8375d88fd44a9900d9e111afdc5, type: 3}
 --- !u!1 &60110094
 GameObject:
   m_ObjectHideFlags: 0
@@ -2017,6 +2015,85 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 924401578}
   m_CullTransparentMesh: 1
+--- !u!1 &929596138
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 929596140}
+  - component: {fileID: 929596139}
+  - component: {fileID: 929596141}
+  m_Layer: 0
+  m_Name: SceneContext
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &929596139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 929596138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89715ad69b973a14899afa2c6730b30b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scriptableObjectInstallers: []
+  _monoInstallers:
+  - {fileID: 929596141}
+  _installerPrefabs: []
+  _autoRun: 1
+  OnPreInstall:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPostInstall:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPreResolve:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPostResolve:
+    m_PersistentCalls:
+      m_Calls: []
+  _parentNewObjectsUnderSceneContext: 0
+  _contractNames: []
+  _parentContractNames: []
+--- !u!4 &929596140
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 929596138}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &929596141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 929596138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2171a3ef0483bff458c5fbbdf6e351e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerRB: {fileID: 1814622102}
+  pulpitPrefab: {fileID: 7670768229142912226, guid: 8e19f8375d88fd44a9900d9e111afdc5, type: 3}
 --- !u!1 &941858747
 GameObject:
   m_ObjectHideFlags: 0
@@ -2128,7 +2205,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f8b85009a9421e4fa0a77141d948171, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jsonUrl: https://s3.ap-south-1.amazonaws.com/superstars.assetbundles.testbuild/doofus_game/doofus_diary.json
 --- !u!114 &994492829
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2145,8 +2221,6 @@ MonoBehaviour:
   winLevelScreen: {fileID: 941858747}
   gameOverThreshold: -3
   player: {fileID: 1814622100}
-  playerInputController: {fileID: 1814622101}
-  jsonLoader: {fileID: 994492828}
   platformGenerator: {fileID: 21526951}
 --- !u!4 &994492830
 Transform:
@@ -2389,7 +2463,7 @@ Transform:
   m_GameObject: {fileID: 1157226308}
   serializedVersion: 2
   m_LocalRotation: {x: 0.32919383, y: 0.0012554211, z: -0.0036010311, w: 0.9442547}
-  m_LocalPosition: {x: 0.017982969, y: 6.3629847, z: -8.684355}
+  m_LocalPosition: {x: 0.017397743, y: 6.362988, z: -8.684352}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3815,7 +3889,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1814622100}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 20
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -4456,7 +4530,7 @@ Transform:
   m_GameObject: {fileID: 2087835957}
   serializedVersion: 2
   m_LocalRotation: {x: 0.32919383, y: 0.0012554211, z: -0.0036010311, w: 0.9442547}
-  m_LocalPosition: {x: 0.017982969, y: 6.3629847, z: -8.684355}
+  m_LocalPosition: {x: 0.017397743, y: 6.362988, z: -8.684352}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4678,3 +4752,4 @@ SceneRoots:
   - {fileID: 1814622106}
   - {fileID: 1923321955}
   - {fileID: 289754613}
+  - {fileID: 929596140}

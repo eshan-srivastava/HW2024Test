@@ -1,6 +1,7 @@
 using UnityEngine;
 // using UnityEngine.Pool;
 using System.Collections.Generic;
+using Zenject;
 
 public class PlatformGenerator : MonoBehaviour
 {
@@ -18,10 +19,12 @@ public class PlatformGenerator : MonoBehaviour
     [SerializeField] private Vector3 lastGeneratedPosition;
     public GameObject lastPlatform;
 
+    [Inject]
     private PlatformSpawnLogic _platformSpawnLogic;
 
     // public Vector3[] potentialEdgeDirections;
-    [SerializeField] private PulpitPool pulpitPool;
+    [Inject]
+    private PulpitPool _pulpitPool;
     public void SetPulpitData(PulpitData pulpitData){
         _generationInterval = pulpitData.pulpit_spawn_time;
         _platformDurationMin = pulpitData.min_pulpit_destroy_time;
@@ -30,7 +33,8 @@ public class PlatformGenerator : MonoBehaviour
     
     private void Start()
     {      
-        _platformSpawnLogic = new PlatformSpawnLogic();
+        // DI'd
+        // _platformSpawnLogic = new PlatformSpawnLogic();
         
         lastGeneratedPosition = lastPlatform.transform.position;   
         InvokeRepeating(nameof(SpawnPulpit), _generationInterval, _generationInterval);
@@ -45,16 +49,15 @@ public class PlatformGenerator : MonoBehaviour
         Vector3 nextSpawnPoint = _platformSpawnLogic.NextRandomSpawnPoint(lastPlatform, transform);
 
         // GameObject newPlatform = Instantiate(pulpitPrefab, nextSpawnPoint, Quaternion.identity);
-        GameObject newPlatform = pulpitPool.GetPooledObject();
+        GameObject newPlatform = _pulpitPool.GetPooledObject();
         newPlatform.transform.position = nextSpawnPoint;
         newPlatform.transform.rotation = Quaternion.identity;
         newPlatform.SetActive(true);
 
         //assign pulpit scripts its components
-        //newPlatform.AddComponent<Pulpit>();
-        newPlatform.GetComponent<Pulpit>().pulpitPool = pulpitPool;
+        // newPlatform.GetComponent<Pulpit>().pulpitPool = pulpitPool;
         newPlatform.GetComponent<Pulpit>().startingNumber = platformDuration;
-        newPlatform.layer = 3;
+        // newPlatform.layer = 3;
         
         lastPlatform = newPlatform;
         lastGeneratedPosition = nextSpawnPoint;

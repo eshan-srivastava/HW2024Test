@@ -1,34 +1,42 @@
+using System;
+using Interfaces;
 using UnityEngine;
-public class PlayerMovementController
+using Zenject;
+
+public class PlayerMovementController : IPlayerMovementController
 {
-    private float _playerSpeed;
-    private const float JumpMultiplier = 1.8f;
-    private const float MovementMultiplier = 2.5f;
-    private Rigidbody _rb;
+    public static float playerSpeed;
+    readonly Rigidbody _rb;
     
-    public PlayerMovementController(Rigidbody rb, float playerSpeed){
+    private const float JumpMultiplier = 3.8f;
+    private const float MovementMultiplier = 2.5f;
+    
+    [Inject]
+    public PlayerMovementController(Rigidbody rb){
         _rb = rb;
-        _playerSpeed = playerSpeed;
     }
     public void Movement(Vector3 inputMovement){
-        float movementFactor = MovementMultiplier * _playerSpeed;
+        float movementFactor = MovementMultiplier * playerSpeed;
 
         // Debug.Log("movement factor is " + movementFactor);
         // rb.velocity += inputMovement * movementFactor;
         
         _rb.velocity = movementFactor * inputMovement;
+
     }
     public void Jump(){
         if (!IsGrounded()){
            return;
         }
-        float jumpFactor = JumpMultiplier * _playerSpeed;
+        float jumpFactor = JumpMultiplier * playerSpeed;
         // _rb.velocity = new Vector3(_rb.velocity.x, jumpFactor, _rb.velocity.z);
-        _rb.velocity += new Vector3(0, jumpFactor, 0);
+        // _rb.velocity += new Vector3(0, jumpFactor, 0);
+        _rb.AddForce(Vector3.up * jumpFactor, ForceMode.VelocityChange);
     }
     private bool IsGrounded()
     {
-        return _rb.velocity.y == 0;
+        // return _rb.velocity.y == 0; // ideally, working with position check for now, realistic y limit should be 0.7-1
+        return _rb.position.y < 2;
     }
 }
 

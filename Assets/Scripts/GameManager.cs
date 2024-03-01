@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Zenject;
 
 public class GameManager : MonoBehaviour
 {
@@ -8,31 +9,36 @@ public class GameManager : MonoBehaviour
     public float gameOverThreshold = -10f;
     
     // private bool _dataLoaded = false;
-    public static bool gameHasEnded;
+    private static bool _gameHasEnded;
     
     private MyDataClass _apiData;
 
     [SerializeField] private GameObject player;
-    [SerializeField]
-    private PlayerInputController playerInputController;
-    [SerializeField]
-    private JsonLoader jsonLoader;
+    // [SerializeField] | infer from player
+    private PlayerInputController _playerInputController;
+    // [SerializeField] | DI'd
+    [Inject]
+    private JsonLoader _jsonLoader;
     [SerializeField]
     private PlatformGenerator platformGenerator;
     void Start()
     {
-        gameHasEnded = false;
-        _apiData = jsonLoader.GetLoadedData();
-        StartCoroutine(FetchAndLoadData());
+        //for zenject, make loading a signal and make it a subject that the GM observes to set data values
+        _gameHasEnded = false;
+        _playerInputController = player.GetComponent<PlayerInputController>();
+        // _apiData = jsonLoader.GetLoadedData();
+        _apiData = _jsonLoader.GetLoadedDataSync();
+        SetDataFromApi();
+        // StartCoroutine(FetchAndLoadData());
     }
 
     void Update()
     {
-        if (gameHasEnded)
+        if (_gameHasEnded)
         {
             return;
         }
-        if (playerInputController.transform.position.y < gameOverThreshold || Input.GetKeyDown(KeyCode.L))
+        if (_playerInputController.transform.position.y < gameOverThreshold || Input.GetKeyDown(KeyCode.L))
         {
             EndLevel();
         }
@@ -42,33 +48,31 @@ public class GameManager : MonoBehaviour
             WinLevel();
         }
     }
+
+    public void SetDataFromApi()
+    {
+        platformGenerator.SetPulpitData(_apiData.pulpit_data);
+        //PlayerInputController.PlayerSpeed = _apiData.player_data.speed;
+        PlayerMovementController.playerSpeed = _apiData.player_data.speed;
+        player.SetActive(true);
+    }
     private IEnumerator FetchAndLoadData()
     {
-        // if (apiData != null){
-        //     Debug.Log("not null api data");
-            
-        // }
-        // yield return _apiData;
-        yield return  new WaitWhile(() => _apiData == null);
-        
-        platformGenerator.SetPulpitData(_apiData.pulpit_data);
-        //playerInputController.PlayerSpeed = _apiData.player_data.speed;
-        PlayerInputController.PlayerSpeed = _apiData.player_data.speed;
-        player.SetActive(true);
+        yield return new WaitWhile(() => _apiData.player_data == null);
     }
     private void EndLevel()
     {
-        gameHasEnded = true;
+        _gameHasEnded = true;
         gameOverScreen.SetActive(true);
         Time.timeScale = 0f;
-        playerInputController.enabled = false;
+        _playerInputController.enabled = false;
         // Debug.Log("Game Ended");
     }
     
     private void WinLevel()
     {
         Time.timeScale = 0f;
-        gameHasEnded = true;
+        _gameHasEnded = true;
         winLevelScreen.SetActive(true);
     }
     
