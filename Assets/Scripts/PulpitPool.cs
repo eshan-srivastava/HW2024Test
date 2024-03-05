@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Util;
 using Zenject;
 
 public class PulpitPool : IInitializable, IDisposable
@@ -10,6 +11,7 @@ public class PulpitPool : IInitializable, IDisposable
 
     // private IObjectPool<GameObject> _pulpitPool;
     private Queue<GameObject> _pulpitPool;
+    // private Deque<GameObject> _pulpitPool;
     private int _amountToPool;
     
     [Inject]
@@ -21,6 +23,7 @@ public class PulpitPool : IInitializable, IDisposable
     public void Initialize()
     {
         _pulpitPool = new Queue<GameObject>();
+        // _pulpitPool = new Deque<GameObject>();
         _amountToPool = 2;
         //prewarm the pool
         AddPulpits(_amountToPool);
@@ -37,9 +40,9 @@ public class PulpitPool : IInitializable, IDisposable
             // obj.GetComponent<Pulpit>().pulpitPool = this;
             // GameObject obj = Pulpit.Factory.Create();
             Pulpit obj = _pulpitFactory.Create();
-            
-            obj.gameObject.SetActive(false);
-            _pulpitPool.Enqueue(obj.gameObject);
+            GameObject objGO = obj.gameObject;
+            objGO.SetActive(false);
+            _pulpitPool.Enqueue(objGO);
         }
     }
     public GameObject GetPooledObject()
@@ -50,6 +53,11 @@ public class PulpitPool : IInitializable, IDisposable
         }
         return _pulpitPool.Dequeue();
     }
+
+    // public GameObject PeekBack()
+    // {
+    //     return _pulpitPool.PeekBack();
+    // }
     public void ReturnToPool(GameObject pulpitToReturn)
     {
         pulpitToReturn.SetActive(false);

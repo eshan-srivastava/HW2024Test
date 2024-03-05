@@ -1,4 +1,3 @@
-using System;
 using Interfaces;
 using UnityEngine;
 using Zenject;
@@ -56,26 +55,5 @@ if(Input.GetKey(KeyCode.W))
         if (Input.GetKey(KeyCode.A))
         {
             rb.velocity = new Vector3(-movementFactor, rb.velocity.y, rb.velocity.z);
-        }
-
-
- * MyDataManager dataManager = MyDataManager.Instance;
-        if(dataManager != null)
-        {
-            MyDataClass data = dataManager.GetData();
-            if (data != null)
-            {
-                Debug.Log(data.player_data.speed);
-                playerSpeed = data.player_data.speed;
-            }
-            else
-            {
-                Debug.Log("Data.GET is null, retrying");
-                JsonLoader.LoadJsonAndPrintDebug();
-            }
-        }
-        else
-        {
-            Debug.Log("DataManager is null");
         }
 */

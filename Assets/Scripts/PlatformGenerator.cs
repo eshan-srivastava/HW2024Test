@@ -1,6 +1,4 @@
 using UnityEngine;
-// using UnityEngine.Pool;
-using System.Collections.Generic;
 using Zenject;
 
 public class PlatformGenerator : MonoBehaviour
@@ -15,6 +13,8 @@ public class PlatformGenerator : MonoBehaviour
     private float _platformDurationMin = 4.1f;
     private float _platformDurationMax = 5.1f;
     public float platformDuration;
+
+    private Vector3[] _positions;
 
     [SerializeField] private Vector3 lastGeneratedPosition;
     public GameObject lastPlatform;
@@ -35,7 +35,11 @@ public class PlatformGenerator : MonoBehaviour
     {      
         // DI'd
         // _platformSpawnLogic = new PlatformSpawnLogic();
-        
+        _positions = new Vector3[2];
+        for (int i=0; i<2; i++)
+        {
+            _positions[i] = Vector3.zero;
+        }
         lastGeneratedPosition = lastPlatform.transform.position;   
         InvokeRepeating(nameof(SpawnPulpit), _generationInterval, _generationInterval);
         //StartCoroutine(GeneratePlatform());
@@ -43,26 +47,35 @@ public class PlatformGenerator : MonoBehaviour
     
     public void SpawnPulpit()
     {
-        //Debug.Log("SpawnPulpit called");
         platformDuration = UnityEngine.Random.Range(_platformDurationMin, _platformDurationMax);
 
-        Vector3 nextSpawnPoint = _platformSpawnLogic.NextRandomSpawnPoint(lastPlatform, transform);
+        // Vector3 nextSpawnPoint = _platformSpawnLogic.NextRandomSpawnPoint(lastPlatform, transform, _pulpitPool.PeekBack().transform.position);
 
+        //updated this function to return next spawn point relative to current platform, helps in 
+        Vector3 nextSpawnPoint = _platformSpawnLogic.NextRandomSpawnPoint(lastPlatform, _positions[1]);
+
+        AddPosition(nextSpawnPoint);
+
+        nextSpawnPoint += lastPlatform.transform.position;
         // GameObject newPlatform = Instantiate(pulpitPrefab, nextSpawnPoint, Quaternion.identity);
         GameObject newPlatform = _pulpitPool.GetPooledObject();
         newPlatform.transform.position = nextSpawnPoint;
         newPlatform.transform.rotation = Quaternion.identity;
         newPlatform.SetActive(true);
 
-        //assign pulpit scripts its components
-        // newPlatform.GetComponent<Pulpit>().pulpitPool = pulpitPool;
         newPlatform.GetComponent<Pulpit>().startingNumber = platformDuration;
+        //these are handled by default for any new pulpit that spawns
+        // newPlatform.GetComponent<Pulpit>().pulpitPool = pulpitPool;
         // newPlatform.layer = 3;
-        
+
         lastPlatform = newPlatform;
-        lastGeneratedPosition = nextSpawnPoint;
-        
-        // Debug.Log("Platform generated at: " + lastGeneratedPosition);
+
         //yield return new WaitForSeconds(generationInterval);
+    }
+
+    private void AddPosition(Vector3 newestPosition)
+    {
+        _positions[0] = _positions[1];
+        _positions[1] = newestPosition;
     }
 }

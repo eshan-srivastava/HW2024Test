@@ -6,19 +6,24 @@ public class GameManager : MonoBehaviour
 {
     public GameObject gameOverScreen;
     public GameObject winLevelScreen;
-    public float gameOverThreshold = -10f;
-    
+
     // private bool _dataLoaded = false;
     private static bool _gameHasEnded;
     
     private MyDataClass _apiData;
-
+    
+    // [Inject]
+    // private readonly SignalBus _signalBus;
+    
     [SerializeField] private GameObject player;
+    
     // [SerializeField] | infer from player
     private PlayerInputController _playerInputController;
+    
     // [SerializeField] | DI'd
     [Inject]
     private JsonLoader _jsonLoader;
+    
     [SerializeField]
     private PlatformGenerator platformGenerator;
     void Start()
@@ -38,13 +43,10 @@ public class GameManager : MonoBehaviour
         {
             return;
         }
-        if (_playerInputController.transform.position.y < gameOverThreshold || Input.GetKeyDown(KeyCode.L))
-        {
-            EndLevel();
-        }
 
         if (PlayerStats.score == 50 || Input.GetKeyDown(KeyCode.J))
         {
+            //can move this to signals too but doesn't feel very profitable to do this.
             WinLevel();
         }
     }
@@ -58,9 +60,12 @@ public class GameManager : MonoBehaviour
     }
     private IEnumerator FetchAndLoadData()
     {
+        //unused, can remove for future, only for checking if data is non null before loading
         yield return new WaitWhile(() => _apiData.player_data == null);
     }
-    private void EndLevel()
+    
+    //taking the approach that EndLevel, WinLevel are observers observing player position || input
+    public void EndLevel()
     {
         _gameHasEnded = true;
         gameOverScreen.SetActive(true);

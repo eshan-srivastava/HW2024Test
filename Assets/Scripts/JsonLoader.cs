@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Net.Http;
+using Signals;
 using UnityEngine;
 using UnityEngine.Networking;
+using Zenject;
 
 public class JsonLoader
 {
@@ -9,9 +11,13 @@ public class JsonLoader
     private readonly string _jsonUrl = "https://s3.ap-south-1.amazonaws.com/superstars.assetbundles.testbuild/doofus_game/doofus_diary.json";
     private MyDataClass _loadedData;
 
-    // public void OnEnable(){
-    //     StartCoroutine(LoadJsonCoroutine());
-    // }
+    private readonly SignalBus _signalBus;
+
+    [Inject]
+    public JsonLoader(SignalBus signalBus)
+    {
+        _signalBus = signalBus;
+    }
     public MyDataClass GetLoadedData()
     {
         Debug.Log("GetLoadedData method called.");

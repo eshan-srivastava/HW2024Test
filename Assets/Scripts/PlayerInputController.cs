@@ -9,8 +9,11 @@ public class PlayerInputController : MonoBehaviour
     // both interface usage and direct class type is working
     // private PlayerMovementController _playerMovementController;
     private IPlayerMovementController _playerMovementController;
-    
     private Rigidbody _rb;
+    public float gameOverThreshold = -3f;
+    
+    [Inject]
+    private readonly SignalBus _signalBus;
 
     [Inject]
     public void Construct(IPlayerMovementController playerMovementController)
@@ -25,9 +28,13 @@ public class PlayerInputController : MonoBehaviour
     }
     void Update()
     {
+        if (transform.position.y < -10f || Input.GetKeyDown(KeyCode.L))
+        {
+            _signalBus.Fire<PlayerDiedSignal>();
+        }
+        
         if(Input.GetKeyDown(KeyCode.Space))
         {
-           // Debug.Log("received space");
            _playerMovementController.Jump();
         }
         Vector3 inputMovement = new(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));

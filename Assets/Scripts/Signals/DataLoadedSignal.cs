@@ -1,7 +1,7 @@
-using UnityEngine;
-using Zenject;
-
-public class DataLoadedSignal
+﻿namespace Signals
 {
-    
+    public class DataLoadedSignal
+    {
+        
+    }
 }
