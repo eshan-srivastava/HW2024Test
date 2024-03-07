@@ -1,3 +1,4 @@
+using System;
 using Interfaces;
 using UnityEngine;
 using Zenject;
@@ -32,11 +33,14 @@ public class PlayerInputController : MonoBehaviour
         {
             _signalBus.Fire<PlayerDiedSignal>();
         }
-        
         if(Input.GetKeyDown(KeyCode.Space))
         {
-           _playerMovementController.Jump();
+            _playerMovementController.Jump();
         }
+    }
+
+    private void FixedUpdate()
+    {
         Vector3 inputMovement = new(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         
         _playerMovementController.Movement(inputMovement);

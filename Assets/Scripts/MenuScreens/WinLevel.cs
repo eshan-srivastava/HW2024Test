@@ -1,13 +1,18 @@
 using UnityEngine;
 
-public class WinLevel : MonoBehaviour
+namespace MenuScreens
 {
-    [SerializeField] private SceneFader sceneFader;
-    [SerializeField] private string menuSceneName = "MainMenu";
-    
-    public void Menu()
+    public class WinLevel : MonoBehaviour
     {
-        PlayerPrefs.SetInt("LevelReached", 2);
-        sceneFader.FadeTo(menuSceneName);
+        [SerializeField] private SceneFader sceneFader;
+        [SerializeField] private string menuSceneName = "MainMenu";
+    
+        public void Menu()
+        {
+            PlayerPrefs.SetInt("LevelReached", 2);
+            sceneFader.FadeTo(menuSceneName);
+        }
+        //ideally i should make a base class of pause functions have the menus inherit but I guess for only two
+    
     }
 }
